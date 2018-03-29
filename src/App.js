@@ -80,7 +80,6 @@ class App extends Component {
       })
     }).catch(e => {
       let list = ls.get('list') || []
-      console.log('error')
       this.setState({
         list,
         sortData: list
