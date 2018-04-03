@@ -48,3 +48,12 @@ Service Worker只能在`process.env.NODE_ENV === 'production'`下使用,需要 b
 yarn global add serve
 serve -s build
 ```
+
+### maximum-scale=1,minimum-scale=1,user-scalable=no
+
+感觉有必要说一下，有好几次在评论里提到这个。在本人的开发过程中基本上会加上这个。
+如不加这个的话有两点坏处
+1.onClick 会有300毫秒的延迟
+2.在输入框的时候会自动放大 需要用户手动缩回来 体验很不好。
+
+之后评论中的体验 看不请的问题，合理的设计屏幕上字体的大小 绝对不会造成这样的问题

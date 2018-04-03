@@ -9,7 +9,8 @@ class App extends Component {
   state = {
     list: [],
     sortData: [],
-    keyword: ''
+    keyword: '',
+    isShowMap: false // 是否显示地图
   }
 
   showPop = ({infowindow, map, marker} = {}) => {
@@ -71,6 +72,8 @@ class App extends Component {
             item.closePop = this.closePop(infowindow)
             marker.addListener('mouseover', item.showPop);
             marker.addListener('mouseout', item.closePop);
+            // 保存marker的值
+            item.marker = marker
           return item
         });
       }
@@ -88,9 +91,21 @@ class App extends Component {
   }
   changeKeyword = (keyword) => {
     this.setState((state) => {
-      let sortData = state.list.filter(item => item.venue.name.toLocaleUpperCase().indexOf(keyword.toLocaleUpperCase()) > -1)
+      let sortData = state.list.filter(item => {
+        let visible = item.venue.name.toLocaleUpperCase().indexOf(keyword.toLocaleUpperCase()) > -1
+        // 隐藏掉相应的marker
+        item.marker.setVisible(visible)
+        return visible
+      })
       return {
         sortData
+      }
+    })
+  }
+  toggleMap = () => {
+    this.setState(({isShowMap}) => {
+      return {
+        isShowMap: !isShowMap
       }
     })
   }
@@ -102,12 +117,13 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="App">
+      <div className={`App ${this.state.isShowMap?'showMobileMap':'hiddenMobileMap'}`}>
         <div className="left">
           <div className="input-box">
             <input placeholder="请输入你要筛选的字" defaultValue={this.state.keyword} onChange={(e) => this.changeKeyword(e.target.value)}/>
             <button onClick={this.toSearch}>搜索</button>
           </div>
+          <div className="toggle-map" onClick={(e) => this.toggleMap()}>{this.state.isShowMap?'隐藏地图':'显示地图'}</div>
           <div className="list">
             <ul>
               {this.state.sortData.map((item, index) => (
